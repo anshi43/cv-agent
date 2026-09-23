@@ -1,0 +1,39 @@
+MARIA SCHNEIDER
+maria.schneider@email.com | +49 171 2345678 | Frankfurt am Main, Germany
+linkedin.com/in/mariaschneider
+
+PROFESSIONAL SUMMARY
+Product manager with 6 years of experience in B2B software, focused on payments and
+workflow automation. Comfortable working between engineering, compliance and sales.
+
+EXPERIENCE
+
+Product Manager, PayFlow Solutions GmbH, Frankfurt (03/2021 - present)
+- Owned the merchant onboarding product, reducing time-to-first-transaction from 9 days to 2 days
+- Redesigned the KYC verification flow, lifting completion rate from 61% to 84%
+- Ran 14 A/B experiments across the signup funnel, increasing activation by 23%
+- Worked with compliance to implement PSD2 strong customer authentication across 3 products
+- Managed a backlog for a team of 8 engineers using Scrum, shipping bi-weekly
+- Built SQL dashboards in Amplitude tracked weekly by the executive team
+
+Associate Product Manager, LogiTech Systems AG, Darmstadt (08/2018 - 02/2021)
+- Launched a supplier portal used by 400+ B2B customers, generating EUR 1.2M ARR in year one
+- Conducted 60+ customer discovery interviews to define the product roadmap
+- Coordinated cross functional releases with engineering, design and customer success
+
+Business Analyst, Deutsche Handel GmbH, Frankfurt (09/2016 - 07/2018)
+- Analysed transaction data to identify EUR 300K in annual process savings
+- Automated monthly reporting, saving 20 hours per month
+
+EDUCATION
+M.Sc. Management & Information Systems, Goethe University Frankfurt, 2016
+B.Sc. Business Administration, University of Mannheim, 2014
+
+SKILLS
+Product: roadmapping, discovery, prioritisation, OKRs, A/B testing
+Technical: SQL, Amplitude, Jira, Figma, REST API basics
+Methods: Agile, Scrum, stakeholder management
+Languages: German (native), English (fluent, C1), Spanish (basic)
+
+CERTIFICATIONS
+Certified Scrum Product Owner (CSPO), 2020

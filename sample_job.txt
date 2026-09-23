@@ -1,0 +1,24 @@
+Senior Product Manager (m/f/d) — Fintech Payments
+Berlin / Hybrid · Full-time
+
+About the role
+We are building the next generation of embedded payments infrastructure for European SMEs.
+You will own the merchant onboarding product area end to end.
+
+What you will do
+- Own the product roadmap for merchant onboarding and KYC flows
+- Work cross functional with engineering, design, compliance and go to market teams
+- Define and track KPIs; run A/B experiments to improve conversion
+- Translate regulatory requirements (PSD2, AML) into product requirements
+- Conduct customer discovery interviews and turn insights into a prioritised backlog
+
+What we are looking for
+- 5+ years of product management experience, ideally in fintech, payments or SaaS
+- Proven track record shipping B2B products with measurable business impact
+- Strong data analysis skills; comfortable with SQL and analytics tools like Amplitude
+- Experience with agile / scrum delivery and stakeholder management
+- Excellent communication in English; German is a plus
+
+Nice to have
+- Experience with API products and developer-facing documentation
+- Background in regulated environments

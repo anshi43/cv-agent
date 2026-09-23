@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CV Tailor Agent — local &amp; free</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b23; --panel2:#1c222c; --line:#2a3140;
+    --ink:#e7ecf3; --mute:#93a1b5; --accent:#5b9cff; --accent2:#38d39f;
+    --warn:#ffb457; --bad:#ff6b6b; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif}
+  header{padding:22px 28px;border-bottom:1px solid var(--line);display:flex;
+         align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(180deg,#151a22,#0e1116)}
+  h1{font-size:19px;margin:0;letter-spacing:-.2px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--mute);font-size:13px}
+  .pill{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;
+        background:var(--panel);border:1px solid var(--line);padding:7px 13px;border-radius:999px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--bad)}
+  .dot.on{background:var(--accent2);box-shadow:0 0 0 3px rgba(56,211,159,.15)}
+  main{display:grid;grid-template-columns:minmax(380px,1fr) minmax(420px,1.25fr);
+       gap:20px;padding:20px 28px 60px;max-width:1600px;margin:0 auto}
+  @media(max-width:1050px){main{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);
+           margin:0 0 12px}
+  label{display:block;font-size:12.5px;color:var(--mute);margin:14px 0 6px}
+  label:first-of-type{margin-top:0}
+  textarea,input,select{width:100%;background:var(--panel2);color:var(--ink);
+       border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:13.5px;
+       font-family:inherit;resize:vertical}
+  textarea{min-height:190px;line-height:1.5}
+  textarea:focus,input:focus,select:focus{outline:none;border-color:var(--accent)}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row>*{flex:1;min-width:150px}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 18px;
+         font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+  button:hover{filter:brightness(1.1)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:500}
+  .drop{border:1.5px dashed var(--line);border-radius:12px;padding:20px;text-align:center;
+        color:var(--mute);font-size:13px;cursor:pointer;transition:.15s}
+  .drop:hover,.drop.over{border-color:var(--accent);color:var(--ink);background:rgba(91,156,255,.06)}
+  .drop b{color:var(--accent)}
+  .steps{list-style:none;padding:0;margin:0;font-size:13px}
+  .steps li{display:flex;align-items:center;gap:10px;padding:6px 0;color:var(--mute)}
+  .steps li .ic{width:18px;text-align:center}
+  .steps li.active{color:var(--ink)}
+  .steps li.done{color:var(--accent2)}
+  .steps li.err{color:var(--bad)}
+  .score{display:flex;align-items:center;gap:18px;margin-bottom:14px}
+  .ring{--v:0;width:92px;height:92px;border-radius:50%;flex:none;display:grid;place-items:center;
+        background:conic-gradient(var(--accent) calc(var(--v)*1%),#232a36 0)}
+  .ring i{width:74px;height:74px;border-radius:50%;background:var(--panel);display:grid;
+          place-items:center;font-style:normal;font-size:22px;font-weight:700}
+  .kw{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .kw span{font-size:11.5px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);
+           background:var(--panel2)}
+  .kw span.hit{color:var(--accent2);border-color:rgba(56,211,159,.35)}
+  .kw span.miss{color:var(--warn);border-color:rgba(255,180,87,.35)}
+  .tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .tabs button{background:var(--panel2);color:var(--mute);font-weight:500;padding:8px 14px;font-size:13px}
+  .tabs button.on{background:var(--accent);color:#fff}
+  .out{background:#fff;color:#14181f;border-radius:10px;padding:26px 30px;min-height:220px;
+       font:14px/1.65 Georgia,"Times New Roman",serif;max-height:66vh;overflow:auto}
+  .out h1{font-size:23px;margin:0 0 4px;text-align:center;font-family:inherit;color:#0f1319}
+  .out h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.1em;color:#2c5697;
+          border-bottom:1.5px solid #dbe3ee;padding-bottom:3px;margin:20px 0 8px}
+  .out h3{font-size:14.5px;margin:12px 0 3px}
+  .out ul{margin:5px 0 5px 18px;padding:0}
+  .out li{margin:3px 0}
+  .out blockquote{border-left:3px solid var(--accent);background:#f3f7ff;margin:0 0 14px;
+                  padding:10px 14px;font-size:13px;font-family:sans-serif}
+  .out pre{background:#f4f6fa;padding:12px;border-radius:8px;overflow:auto;font-size:12px}
+  .muted{color:var(--mute);font-size:12.5px}
+  .flag{background:rgba(255,180,87,.08);border-left:3px solid var(--warn);padding:8px 12px;
+        border-radius:0 8px 8px 0;font-size:12.5px;margin:6px 0}
+  .gap{background:var(--panel2);border-radius:10px;padding:11px 13px;margin:8px 0;font-size:13px}
+  .gap b{color:var(--ink)} .gap .sev{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+  .sev.blocking{color:var(--bad)} .sev.important{color:var(--warn)} .sev.minor{color:var(--mute)}
+  .banner{background:rgba(255,180,87,.1);border:1px solid rgba(255,180,87,.3);color:#ffd9a3;
+          padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:14px}
+  .banner code{background:rgba(0,0,0,.35);padding:2px 6px;border-radius:5px;color:#fff}
+  .delta{font-size:13px;color:var(--mute)}
+  .delta b{color:var(--accent2)}
+  footer{padding:0 28px 40px;color:var(--mute);font-size:12px;max-width:1600px;margin:0 auto}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>CV Tailor <span>Agent</span></h1>
+    <div class="sub">Job ad in → rewritten CV, cover letter and ATS gap report out. 100% local, 100% free.</div>
+  </div>
+  <div class="pill"><span class="dot" id="dot"></span><span id="llmStatus">checking Ollama…</span></div>
+</header>
+
+<main>
+  <!-- ─────────── INPUT ─────────── -->
+  <section>
+    <div class="card">
+      <h2>1 · Your CV</h2>
+      <div class="drop" id="drop">
+        <b>Click or drop</b> a PDF / DOCX / TXT here<br>
+        <span style="font-size:12px">…or just paste the text below</span>
+        <input type="file" id="file" accept=".pdf,.docx,.txt,.md" hidden>
+      </div>
+      <label for="cv">Extracted CV text <span class="muted">(editable — this is what the ATS sees)</span></label>
+      <textarea id="cv" placeholder="Paste your CV here…"></textarea>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h2>2 · Job description</h2>
+      <textarea id="jd" placeholder="Paste the full job ad — requirements, responsibilities, everything."></textarea>
+      <div class="row" style="margin-top:14px">
+        <div>
+          <label for="model">Model</label>
+          <select id="model"><option value="">default</option></select>
+        </div>
+        <div>
+          <label for="tone">Tone</label>
+          <select id="tone">
+            <option>professional</option><option>confident</option>
+            <option>warm</option><option>concise</option><option>startup-casual</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:16px">
+        <button class="ghost" id="scanBtn">Quick ATS scan</button>
+        <button id="runBtn">Run agent →</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px" id="pipeCard" hidden>
+      <h2>Agent pipeline</h2>
+      <ul class="steps" id="steps"></ul>
+    </div>
+  </section>
+
+  <!-- ─────────── OUTPUT ─────────── -->
+  <section>
+    <div class="card" id="scoreCard" hidden>
+      <h2>ATS match</h2>
+      <div class="score">
+        <div class="ring" id="ring"><i id="ringVal">0%</i></div>
+        <div>
+          <div id="deltaLine" class="delta"></div>
+          <div class="muted" style="margin-top:4px" id="scoreNote"></div>
+        </div>
+      </div>
+      <div class="muted">Matched keywords</div><div class="kw" id="hits"></div>
+      <div class="muted" style="margin-top:12px">Missing keywords</div><div class="kw" id="miss"></div>
+      <div id="hygiene" style="margin-top:14px"></div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="tabs">
+        <button class="on" data-tab="cv">Tailored CV</button>
+        <button data-tab="letter">Cover letter</button>
+        <button data-tab="fit">Fit &amp; gaps</button>
+      </div>
+      <div id="banner"></div>
+      <div class="out" id="out"><span class="muted" style="font-family:sans-serif">
+        Results appear here. Paste a CV and a job ad, then hit <b>Run agent</b>.</span></div>
+      <div class="row" style="margin-top:14px">
+        <button class="ghost" id="copyBtn" disabled>Copy</button>
+        <button class="ghost" id="dlDocx" disabled>Download .docx</button>
+        <button class="ghost" id="dlZip" disabled>Download all (.zip)</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Everything runs on your machine — your CV never leaves it. Powered by Ollama + Flask.
+  Rewrites are grounded in your original CV and audited by a fact-checking pass, but
+  <b>always read the output before you send it</b>.
+</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+let RESULT = null, TAB = 'cv';
+
+/* ---------- status ---------- */
+async function status(){
+  try{
+    const r = await (await fetch('/api/status')).json();
+    $('#dot').classList.toggle('on', r.ollama);
+    $('#llmStatus').textContent = r.ollama
+      ? `Ollama connected · ${r.models.length} model${r.models.length===1?'':'s'}`
+      : 'Ollama offline — demo mode';
+    const sel = $('#model');
+    sel.innerHTML = '<option value="">default ('+r.default_model+')</option>';
+    r.models.forEach(m=>{ const o=document.createElement('option'); o.value=o.textContent=m; sel.appendChild(o); });
+  }catch(e){ $('#llmStatus').textContent='status unavailable'; }
+}
+status();
+
+/* ---------- file upload ---------- */
+const drop=$('#drop'), file=$('#file');
+drop.onclick=()=>file.click();
+drop.ondragover=e=>{e.preventDefault();drop.classList.add('over')};
+drop.ondragleave=()=>drop.classList.remove('over');
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');if(e.dataTransfer.files[0])upload(e.dataTransfer.files[0])};
+file.onchange=()=>file.files[0]&&upload(file.files[0]);
+
+async function upload(f){
+  drop.innerHTML='Reading <b>'+f.name+'</b>…';
+  const fd=new FormData(); fd.append('file',f);
+  const r=await (await fetch('/api/extract',{method:'POST',body:fd})).json();
+  if(r.error){ drop.innerHTML='❌ '+r.error; return; }
+  $('#cv').value=r.text;
+  drop.innerHTML='✅ <b>'+f.name+'</b> — '+r.text.length.toLocaleString()+' characters extracted<br><span style="font-size:12px">click to replace</span>';
+  if(r.warning) drop.innerHTML+='<div style="color:#ffb457;font-size:12px;margin-top:6px">'+r.warning+'</div>';
+}
+
+/* ---------- quick scan ---------- */
+$('#scanBtn').onclick=async()=>{
+  const body={cv:$('#cv').value,jd:$('#jd').value};
+  if(!body.cv.trim()||!body.jd.trim()){alert('Fill in both the CV and the job description.');return;}
+  const r=await (await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+  if(r.error){alert(r.error);return;}
+  showScore(r,null); $('#scoreNote').textContent='Keyword scan only — run the agent for a rewrite.';
+  renderHygiene(r.hygiene);
+};
+
+function showScore(before, after){
+  $('#scoreCard').hidden=false;
+  const s = after ? after.score : before.score;
+  $('#ring').style.setProperty('--v',s);
+  $('#ringVal').textContent=s+'%';
+  $('#deltaLine').innerHTML = after
+    ? `Before <b style="color:var(--mute)">${before.score}%</b> → after <b>${after.score}%</b> `
+      + (after.score-before.score>0?`<b>(+${after.score-before.score})</b>`:'')
+    : `${before.matched.length} of ${before.keywords.length} job keywords found in your CV.`;
+  const src = after||before;
+  $('#hits').innerHTML=src.matched.map(k=>`<span class="hit">${esc(k)}</span>`).join('')||'<span class="muted">none</span>';
+  $('#miss').innerHTML=src.missing.map(k=>`<span class="miss">${esc(k)}</span>`).join('')||'<span class="hit">none — full coverage</span>';
+}
+function renderHygiene(f){
+  $('#hygiene').innerHTML=(f&&f.length)
+    ? '<div class="muted" style="margin-bottom:6px">ATS hygiene</div>'+f.map(x=>`<div class="flag">${esc(x)}</div>`).join('')
+    : '<div class="flag" style="border-color:var(--accent2);background:rgba(56,211,159,.08)">No ATS formatting problems detected.</div>';
+}
+
+/* ---------- pipeline ---------- */
+const STEPS=[['analyse_jd','Analysing job ad'],['parse_cv','Parsing your CV'],
+  ['gap_analysis','Matching skills & finding gaps'],['write_cv','Rewriting the CV'],
+  ['fact_check','Fact-checking against your original'],['revise_cv','Applying corrections'],
+  ['write_letter','Writing the cover letter']];
+
+function drawSteps(state){
+  $('#pipeCard').hidden=false;
+  $('#steps').innerHTML=STEPS.map(([k,label])=>{
+    const st=state[k]||'';
+    const ic=st==='done'?'✓':st==='start'?'◐':st==='error'?'✕':'○';
+    const cls=st==='done'?'done':st==='start'?'active':st==='error'?'err':'';
+    return `<li class="${cls}"><span class="ic">${ic}</span>${label}</li>`;
+  }).join('');
+}
+
+$('#runBtn').onclick=()=>{
+  const cv=$('#cv').value, jd=$('#jd').value;
+  if(!cv.trim()||!jd.trim()){alert('Fill in both the CV and the job description.');return;}
+  const btn=$('#runBtn'); btn.disabled=true; btn.textContent='Working…';
+  const state={}; drawSteps(state);
+  $('#out').innerHTML='<span class="muted" style="font-family:sans-serif">The agent is thinking. A local 8B model takes roughly 1–3 minutes for all steps.</span>';
+
+  fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({cv,jd,model:$('#model').value,tone:$('#tone').value})})
+  .then(res=>{
+    const rd=res.body.getReader(), dec=new TextDecoder(); let buf='';
+    (function pump(){
+      rd.read().then(({done,value})=>{
+        if(done){ btn.disabled=false; btn.textContent='Run agent →'; return; }
+        buf+=dec.decode(value,{stream:true});
+        const parts=buf.split('\n\n'); buf=parts.pop();
+        parts.forEach(p=>{
+          const line=p.split('\n').find(l=>l.startsWith('data: '));
+          if(!line) return;
+          let ev; try{ ev=JSON.parse(line.slice(6)); }catch(e){ return; }
+          if(ev.stage==='result'){ RESULT=ev.result; render(); }
+          else if(ev.stage==='error'){ $('#out').innerHTML='<div style="color:#c00;font-family:sans-serif">'+esc(ev.message)+'</div>'; }
+          else { state[ev.stage]=ev.status; drawSteps(state); }
+        });
+        pump();
+      });
+    })();
+  }).catch(e=>{ btn.disabled=false; btn.textContent='Run agent →'; alert(e); });
+};
+
+/* ---------- render ---------- */
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); TAB=b.dataset.tab; render();
+});
+
+function render(){
+  if(!RESULT) return;
+  ['#copyBtn','#dlDocx','#dlZip'].forEach(s=>$(s).disabled=false);
+  $('#banner').innerHTML = RESULT.demo_mode
+    ? '<div class="banner"><b>Demo mode.</b> No local model found. Install Ollama, then run '
+      +'<code>ollama pull llama3.1:8b</code> and <code>ollama serve</code> to get real rewrites. '
+      +'The ATS scan on the left is fully functional.</div>'
+    : (RESULT.revised ? '<div class="banner">The fact-checker caught unsupported claims in the first draft; the CV shown is the corrected revision.</div>' : '');
+
+  if(RESULT.ats_before) showScore(RESULT.ats_before, RESULT.ats_after);
+  renderHygiene(RESULT.hygiene);
+
+  if(TAB==='cv')      $('#out').innerHTML = md(RESULT.cv_markdown||'');
+  else if(TAB==='letter') $('#out').innerHTML = md(RESULT.cover_letter||'');
+  else                $('#out').innerHTML = fitHtml(RESULT);
+}
+
+function fitHtml(r){
+  const g=r.gaps||{}; let h='<div style="font-family:sans-serif;font-size:13.5px;color:#14181f">';
+  h+=`<h2 style="font-family:inherit">Verdict</h2><p><b>${esc(g.verdict||'—')}</b></p>`;
+  if((g.strengths||[]).length){ h+='<h2 style="font-family:inherit">Strengths</h2><ul>';
+    g.strengths.forEach(s=>h+=`<li><b>${esc(s.requirement||'')}</b> — ${esc(s.evidence||'')}</li>`); h+='</ul>'; }
+  if((g.gaps||[]).length){ h+='<h2 style="font-family:inherit">Gaps</h2>';
+    g.gaps.forEach(x=>h+=`<div style="background:#f4f6fa;border-radius:8px;padding:10px 12px;margin:7px 0">
+      <b>${esc(x.requirement||'')}</b> <span style="font-size:11px;text-transform:uppercase;color:#a05">${esc(x.severity||'')}</span>
+      <div style="margin-top:3px">${esc(x.mitigation||'')}</div></div>`); }
+  if((g.keywords_to_add||[]).length)
+    h+='<h2 style="font-family:inherit">Keywords to weave in</h2><p>'+g.keywords_to_add.map(esc).join(' · ')+'</p>';
+  if((g.reorder_advice||[]).length){ h+='<h2 style="font-family:inherit">Structural advice</h2><ul>';
+    g.reorder_advice.forEach(x=>h+=`<li>${esc(x)}</li>`); h+='</ul>'; }
+  const a=r.audit;
+  if(a&&a.issues&&a.issues.length){ h+='<h2 style="font-family:inherit">Fact-check log</h2><ul>';
+    a.issues.forEach(i=>h+=`<li><b>${esc(i.claim||'')}</b> — ${esc(i.why||'')} → ${esc(i.fix||'')}</li>`); h+='</ul>'; }
+  if(r.elapsed) h+=`<p style="color:#667;font-size:12px">Completed in ${r.elapsed}s.</p>`;
+  return h+'</div>';
+}
+
+/* ---------- downloads ---------- */
+$('#copyBtn').onclick=()=>{
+  const t = TAB==='letter'?RESULT.cover_letter:RESULT.cv_markdown;
+  navigator.clipboard.writeText(t||'');
+  $('#copyBtn').textContent='Copied ✓'; setTimeout(()=>$('#copyBtn').textContent='Copy',1400);
+};
+$('#dlDocx').onclick=()=>location.href=`/api/download/${RESULT.job_id}/${TAB==='letter'?'letter.docx':'cv.docx'}`;
+$('#dlZip').onclick=()=>location.href=`/api/download/${RESULT.job_id}/bundle.zip`;
+
+/* ---------- tiny markdown renderer ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function md(src){
+  const lines=String(src).split('\n'); let html='', inUl=false, inPre=false;
+  const inline=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+                        .replace(/(^|\W)\*([^*]+)\*/g,'$1<i>$2</i>')
+                        .replace(/`([^`]+)`/g,'<code>$1</code>');
+  for(let raw of lines){
+    const l=raw.replace(/\s+$/,'');
+    if(l.trim().startsWith('```')){ if(inPre){html+='</pre>';inPre=false}else{html+='<pre>';inPre=true} continue; }
+    if(inPre){ html+=esc(raw)+'\n'; continue; }
+    if(!l.trim()){ if(inUl){html+='</ul>';inUl=false} continue; }
+    if(l.startsWith('> ')){ if(inUl){html+='</ul>';inUl=false} html+='<blockquote>'+inline(l.slice(2))+'</blockquote>'; continue; }
+    const h=l.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ if(inUl){html+='</ul>';inUl=false} html+=`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`; continue; }
+    if(/^\s*[-*]\s+/.test(l)){ if(!inUl){html+='<ul>';inUl=true} html+='<li>'+inline(l.replace(/^\s*[-*]\s+/,''))+'</li>'; continue; }
+    if(inUl){html+='</ul>';inUl=false}
+    html+='<p style="margin:6px 0">'+inline(l)+'</p>';
+  }
+  if(inUl)html+='</ul>'; if(inPre)html+='</pre>';
+  return html;
+}
+</script>
+</body>
+</html>
